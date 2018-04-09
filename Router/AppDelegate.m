@@ -23,15 +23,20 @@
     self.window.rootViewController = [[UINavigationController alloc]initWithRootViewController:[[ViewController alloc]init]];
     [self.window makeKeyWindow];
     
-    JLRoutes *routes = [JLRoutes globalRoutes];
+    //JLRoutes *routes = [JLRoutes globalRoutes];
+    JLRoutes *routes = [JLRoutes routesForScheme:@"pp"];
     [routes addRoute:@"/first/:controller" handler:^BOOL(NSDictionary<NSString *,id> * _Nonnull parameters) {
+        
         UIViewController *currentVC = [self getCurrentVC];
         UIViewController *vc = [[NSClassFromString(parameters[@"controller"]) alloc]init];
         [self passVC:vc withParameters:parameters];
         [currentVC.navigationController pushViewController:vc animated:YES];
         return YES;
     }];
-    
+    [routes addRoute:@"/second" handler:^BOOL(NSDictionary<NSString *,id> * _Nonnull parameters) {
+        return NO;
+    }];
+    NSLog(@"%@", [JLRoutes allRoutes]);
     return YES;
 }
 
@@ -71,9 +76,15 @@
 }
 
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
-    [JLRoutes routeURL:url];
+    //[JLRoutes routeURL:url];
+//    NSLog(@"%@", url);
+//    NSLog(@"%@", url.scheme);
+
+    //[JLRoutes routeURL:url withParameters:options];
+    [[JLRoutes routesForScheme:@"pp"] routeURL:url];
     return YES;
 }
+
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

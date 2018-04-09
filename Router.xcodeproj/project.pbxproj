@@ -18,6 +18,8 @@
 		787D42302074A1B700A9ADB1 /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D422F2074A1B700A9ADB1 /* FirstViewController.m */; };
 		787D42332074A1C200A9ADB1 /* SecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D42322074A1C200A9ADB1 /* SecondViewController.m */; };
 		787D42362074A1CC00A9ADB1 /* ThirdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D42352074A1CC00A9ADB1 /* ThirdViewController.m */; };
+		787D423A207B33F000A9ADB1 /* UIViewController+LogMsg.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D4239207B33F000A9ADB1 /* UIViewController+LogMsg.m */; };
+		787D423D207B382700A9ADB1 /* BaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D423C207B382700A9ADB1 /* BaseViewController.m */; };
 		BDE010FCB9A387BA8178D184 /* libPods-Router.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A782DA3D365D125354DA21D /* libPods-Router.a */; };
 /* End PBXBuildFile section */
 
@@ -63,6 +65,10 @@
 		787D42322074A1C200A9ADB1 /* SecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SecondViewController.m; sourceTree = "<group>"; };
 		787D42342074A1CC00A9ADB1 /* ThirdViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThirdViewController.h; sourceTree = "<group>"; };
 		787D42352074A1CC00A9ADB1 /* ThirdViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThirdViewController.m; sourceTree = "<group>"; };
+		787D4238207B33F000A9ADB1 /* UIViewController+LogMsg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+LogMsg.h"; sourceTree = "<group>"; };
+		787D4239207B33F000A9ADB1 /* UIViewController+LogMsg.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+LogMsg.m"; sourceTree = "<group>"; };
+		787D423B207B382700A9ADB1 /* BaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseViewController.h; sourceTree = "<group>"; };
+		787D423C207B382700A9ADB1 /* BaseViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseViewController.m; sourceTree = "<group>"; };
 		9C26158D67AFB9A5AF1B76CD /* Pods-Router.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Router.release.xcconfig"; path = "Pods/Target Support Files/Pods-Router/Pods-Router.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +123,7 @@
 		787D41FA2074A18200A9ADB1 /* Router */ = {
 			isa = PBXGroup;
 			children = (
+				787D4237207B194500A9ADB1 /* Category */,
 				787D422D2074A19400A9ADB1 /* Controllers */,
 				787D41FB2074A18200A9ADB1 /* AppDelegate.h */,
 				787D41FC2074A18200A9ADB1 /* AppDelegate.m */,
@@ -152,6 +159,8 @@
 		787D422D2074A19400A9ADB1 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				787D423B207B382700A9ADB1 /* BaseViewController.h */,
+				787D423C207B382700A9ADB1 /* BaseViewController.m */,
 				787D422E2074A1B700A9ADB1 /* FirstViewController.h */,
 				787D422F2074A1B700A9ADB1 /* FirstViewController.m */,
 				787D42312074A1C200A9ADB1 /* SecondViewController.h */,
@@ -160,6 +169,15 @@
 				787D42352074A1CC00A9ADB1 /* ThirdViewController.m */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		787D4237207B194500A9ADB1 /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				787D4238207B33F000A9ADB1 /* UIViewController+LogMsg.h */,
+				787D4239207B33F000A9ADB1 /* UIViewController+LogMsg.m */,
+			);
+			path = Category;
 			sourceTree = "<group>";
 		};
 		877867149E24E124D4FC4402 /* Frameworks */ = {
@@ -367,8 +385,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				787D42332074A1C200A9ADB1 /* SecondViewController.m in Sources */,
+				787D423D207B382700A9ADB1 /* BaseViewController.m in Sources */,
 				787D42002074A18200A9ADB1 /* ViewController.m in Sources */,
 				787D42362074A1CC00A9ADB1 /* ThirdViewController.m in Sources */,
+				787D423A207B33F000A9ADB1 /* UIViewController+LogMsg.m in Sources */,
 				787D420B2074A18200A9ADB1 /* main.m in Sources */,
 				787D41FD2074A18200A9ADB1 /* AppDelegate.m in Sources */,
 				787D42302074A1B700A9ADB1 /* FirstViewController.m in Sources */,

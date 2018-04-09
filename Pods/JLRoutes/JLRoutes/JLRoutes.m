@@ -21,7 +21,7 @@ NSString *const JLRouteSchemeKey = @"JLRouteScheme";
 NSString *const JLRouteWildcardComponentsKey = @"JLRouteWildcardComponents";
 NSString *const JLRoutesGlobalRoutesScheme = @"JLRoutesGlobalRoutesScheme";
 
-
+//保存一个全局的字典
 static NSMutableDictionary *JLRGlobal_routeControllersMap = nil;
 
 
@@ -65,11 +65,13 @@ static Class JLRGlobal_routeDefinitionClass;
     return self;
 }
 
+//重写方法，可以打印出当前的路由表
 - (NSString *)description
 {
     return [self.mutableRoutes description];
 }
 
+//获取所有类型scheme的路由
 + (NSDictionary <NSString *, NSArray <JLRRouteDefinition *> *> *)allRoutes;
 {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
@@ -84,6 +86,9 @@ static Class JLRGlobal_routeDefinitionClass;
 
 
 #pragma mark - Routing Schemes
+
+//初始化路由表的方法，scheme用来区分每一张路由表。（要与url的scheme相区分）
+//常量JLRoutesGlobalRoutesScheme代表了一张默认的全局路由表，可由+ (instancetype)globalRoutes方法快速定义。也可以定义其他scheme路由表。
 
 + (instancetype)globalRoutes
 {
@@ -106,7 +111,6 @@ static Class JLRGlobal_routeDefinitionClass;
     }
     
     routesController = JLRGlobal_routeControllersMap[scheme];
-    
     return routesController;
 }
 
@@ -128,6 +132,8 @@ static Class JLRGlobal_routeDefinitionClass;
     [self _registerRoute:routeDefinition];
 }
 
+
+//为某一张路由表添加路由
 - (void)addRoute:(NSString *)routePattern handler:(BOOL (^)(NSDictionary<NSString *, id> *parameters))handlerBlock
 {
     [self addRoute:routePattern priority:0 handler:handlerBlock];
@@ -208,11 +214,14 @@ static Class JLRGlobal_routeDefinitionClass;
     return [self _routeURL:URL withParameters:nil executeRouteBlock:NO];
 }
 
+//解释路由表中url的入口。
+//如果采用类方法，则默认使用全局的路由表来解释url
 + (BOOL)routeURL:(NSURL *)URL
 {
     return [[self _routesControllerForURL:URL] routeURL:URL];
 }
 
+//上面的方法会进入到这个方法里面。
 - (BOOL)routeURL:(NSURL *)URL
 {
     return [self _routeURL:URL withParameters:nil executeRouteBlock:YES];
@@ -268,6 +277,7 @@ static Class JLRGlobal_routeDefinitionClass;
     [route didBecomeRegisteredForScheme:self.scheme];
 }
 
+//核心方法的入口
 - (BOOL)_routeURL:(NSURL *)URL withParameters:(NSDictionary *)parameters executeRouteBlock:(BOOL)executeRouteBlock
 {
     if (!URL) {

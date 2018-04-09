@@ -49,7 +49,6 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>RouterOne</string>
-				<string>RouterTwo</string>
 			</array>
 		</dict>
 	</array>
