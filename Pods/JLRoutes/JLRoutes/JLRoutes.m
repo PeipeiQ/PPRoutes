@@ -24,7 +24,7 @@ NSString *const JLRoutesGlobalRoutesScheme = @"JLRoutesGlobalRoutesScheme";
 //保存一个全局的字典
 static NSMutableDictionary *JLRGlobal_routeControllersMap = nil;
 
-
+//全局属性
 // global options (configured in +initialize)
 static BOOL JLRGlobal_verboseLoggingEnabled;
 static BOOL JLRGlobal_shouldDecodePlusSymbols;
@@ -89,7 +89,7 @@ static Class JLRGlobal_routeDefinitionClass;
 
 //初始化路由表的方法，scheme用来区分每一张路由表。（要与url的scheme相区分）
 //常量JLRoutesGlobalRoutesScheme代表了一张默认的全局路由表，可由+ (instancetype)globalRoutes方法快速定义。也可以定义其他scheme路由表。
-
+//实质是创建一个单例
 + (instancetype)globalRoutes
 {
     return [self routesForScheme:JLRoutesGlobalRoutesScheme];
@@ -146,15 +146,31 @@ static Class JLRGlobal_routeDefinitionClass;
     }
 }
 
+//增加路由的核心方法
 - (void)addRoute:(NSString *)routePattern priority:(NSUInteger)priority handler:(BOOL (^)(NSDictionary<NSString *, id> *parameters))handlerBlock
 {
+    /* this method exists to take a route pattern that is known to contain optional params, such as:
+    /path/:thing/(/a)(/b)(/c)
+    and create the following paths:
+    /path/:thing/a/b/c
+    /path/:thing/a/b
+    /path/:thing/a/c
+    /path/:thing/b/a
+    /path/:thing/a
+    /path/:thing/b
+    /path/:thing/c
+    */
+    //这个方法可以获得一些可选类型的url，并单独处理
     NSArray <NSString *> *optionalRoutePatterns = [JLRParsingUtilities expandOptionalRoutePatternsForPattern:routePattern];
+    
+    //将url包装成一个JLRRouteDefinition对象
     JLRRouteDefinition *route = [[JLRGlobal_routeDefinitionClass alloc] initWithPattern:routePattern priority:priority handlerBlock:handlerBlock];
     
     if (optionalRoutePatterns.count > 0) {
         // there are optional params, parse and add them
         for (NSString *pattern in optionalRoutePatterns) {
             JLRRouteDefinition *optionalRoute = [[JLRGlobal_routeDefinitionClass alloc] initWithPattern:pattern priority:priority handlerBlock:handlerBlock];
+            //注册路由的方法
             [self _registerRoute:optionalRoute];
             [self _verboseLog:@"Automatically created optional route: %@", optionalRoute];
         }
@@ -249,6 +265,7 @@ static Class JLRGlobal_routeDefinitionClass;
     return JLRGlobal_routeControllersMap[URL.scheme] ?: [JLRoutes globalRoutes];
 }
 
+//
 - (void)_registerRoute:(JLRRouteDefinition *)route
 {
     if (route.priority == 0 || self.mutableRoutes.count == 0) {
@@ -340,6 +357,7 @@ static Class JLRGlobal_routeDefinitionClass;
     return [self.scheme isEqualToString:JLRoutesGlobalRoutesScheme];
 }
 
+//打印信息
 - (void)_verboseLog:(NSString *)format, ...
 {
     if (!JLRGlobal_verboseLoggingEnabled || format.length == 0) {
@@ -376,8 +394,10 @@ static Class JLRGlobal_routeDefinitionClass;
 
 #pragma mark - Global Options
 
+//类的扩展，可以设置一些全局的属性
 @implementation JLRoutes (GlobalOptions)
 
+//设置可否打印对应的信息
 + (void)setVerboseLoggingEnabled:(BOOL)loggingEnabled
 {
     JLRGlobal_verboseLoggingEnabled = loggingEnabled;
@@ -387,6 +407,7 @@ static Class JLRGlobal_routeDefinitionClass;
 {
     return JLRGlobal_verboseLoggingEnabled;
 }
+
 
 + (void)setShouldDecodePlusSymbols:(BOOL)shouldDecode
 {

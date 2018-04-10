@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "FirstViewController.h"
+#import "ButtonView.h"
 
 @interface ViewController ()
 @property(nonatomic,strong) NSString *name;
@@ -17,7 +18,18 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self routerDemo];
+    //[self routerDemo];
+    [self labelTest];
+}
+
+-(void)labelTest{
+    NSArray *arr = @[@"aghfghdgijdfkgjdlfkjgdlkfc",@"byryttjgbb",@"sdrrkkkktrh",@"sfgsdgjdfkhdfk",@"sdafa",@"sfjhsbdjd"];
+    ButtonView *bView = [[ButtonView alloc]initWithFrame:CGRectMake(0, 64, 375, 500) contentArray:arr];
+    [self.view addSubview:bView];
+    
+}
+-(void)tap:(UITapGestureRecognizer*)sender{
+    NSLog(@"aaa");
 }
 
 -(void)routerDemo{

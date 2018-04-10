@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSDictionary *)queryParams:(NSDictionary *)queryParams decodePlusSymbols:(BOOL)decodePlusSymbols;
 
+
 + (NSArray <NSString *> *)expandOptionalRoutePatternsForPattern:(NSString *)routePattern;
 
 @end

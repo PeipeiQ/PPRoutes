@@ -36,7 +36,7 @@
     [routes addRoute:@"/second" handler:^BOOL(NSDictionary<NSString *,id> * _Nonnull parameters) {
         return NO;
     }];
-    NSLog(@"%@", [JLRoutes allRoutes]);
+    //NSLog(@"%@", [JLRoutes allRoutes]);
     return YES;
 }
 
@@ -76,11 +76,6 @@
 }
 
 -(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
-    //[JLRoutes routeURL:url];
-//    NSLog(@"%@", url);
-//    NSLog(@"%@", url.scheme);
-
-    //[JLRoutes routeURL:url withParameters:options];
     [[JLRoutes routesForScheme:@"pp"] routeURL:url];
     return YES;
 }
