@@ -7,14 +7,22 @@
 //
 
 #import "ButtonView.h"
+
+
+
 @interface ButtonView()
 @property(nonatomic,assign) CGSize contentSize;
-@property(nonatomic,strong) NSArray *contentArray;
-@property(nonatomic,strong) NSMutableArray *labels;
+@property(nonatomic,assign) CGPoint contentOrigin;
 
+@property(nonatomic,strong) NSArray *contentArr;
+@property(nonatomic,strong) NSMutableArray *contentArray;
+@property(nonatomic,strong) NSMutableArray *labels;
+@property(nonatomic,strong) resetBlock sizeBlock;
 @end
 
-@implementation ButtonView
+@implementation ButtonView{
+    LabelViewLayoutStyle _options;
+}
 
 -(instancetype)init{
     if (self=[super init]) {
@@ -24,62 +32,120 @@
 }
 
 
--(instancetype)initWithFrame:(CGRect)frame contentArray:(NSArray*)contentArray{
+-(instancetype)initWithFrame:(CGRect)frame contentArray:(NSArray*)contentArray fontSize:(CGFloat)fontsize options:(LabelViewLayoutStyle)options sizeBlock:(resetBlock)block{
     if (self=[super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor grayColor];
+        self.backgroundColor = [UIColor whiteColor];
         _labels = [NSMutableArray array];
+        _contentOrigin = frame.origin;
         _contentSize = frame.size;
-        _contentArray = contentArray;
-        [self renderLabels:contentArray];
+        _contentArr = contentArray;
+        _fontSize = fontsize;
+        _options = options;
+        _sizeBlock = block;
+        
+        //default property
+        _selectedColor = [UIColor redColor];
+        _unselectedColor = [UIColor blackColor];
+        _defaultSelected = 0;
+        _hasDefualtSelected = YES;
+        _edge = 18;
+        _space = 15;
+        _isMutiSelected = NO;
     }
     return self;
 }
 
+
+
+-(void)layoutSubviews{
+    [self renderLabels:_contentArr];
+}
+
+#pragma -mark private event
 -(void)renderLabels:(NSArray*)contentArray{
-    //外边距
-    CGFloat edge = 18;
+
+    CGFloat edge = self.edge;
     CGFloat edgeTop = edge;
     CGFloat edgeLeft = edge;
 
-    //label间距
-    CGFloat space = 15;
+    CGFloat space = self.space;
     
-    unsigned int count=1;
+    _contentArray = [[NSMutableArray alloc]init];
+    for (int i=0; i<contentArray.count; i++) {
+        if (_hasDefualtSelected) {
+            if (i==_defaultSelected) {
+                NSDictionary *dic = [[NSDictionary dictionaryWithObjectsAndKeys:contentArray[i],@"content",@(YES),@"isSelected",@(i),@"arrIndex",nil] mutableCopy];
+                [_contentArray setObject:dic atIndexedSubscript:i];
+            }else{
+                NSDictionary *dic = [[NSDictionary dictionaryWithObjectsAndKeys:contentArray[i],@"content",@(NO),@"isSelected",@(i),@"arrIndex",nil] mutableCopy];
+                [_contentArray setObject:dic atIndexedSubscript:i];
+            }
+        }else{
+            NSDictionary *dic = [[NSDictionary dictionaryWithObjectsAndKeys:contentArray[i],@"content",@(NO),@"isSelected",@(i),@"arrIndex",nil] mutableCopy];
+            [_contentArray setObject:dic atIndexedSubscript:i];
+        }
+    }
     
-    for (NSString *str in contentArray) {
-        CGSize labelSize = [self labelAutoCalculateRectWith:str FontSize:17 MaxSize:_contentSize];
-        CGFloat labelHeight = labelSize.height;
+    int count=1;
+    CGFloat rowHeight = 0.0;
+    CGFloat totalHeight=0;
+    CGFloat totalWidth=0;
+    
+    for (NSDictionary *strDic in _contentArray) {
+        CGSize labelSize = [self labelAutoCalculateRectWith:strDic[@"content"] FontSize:self.fontSize MaxSize:_contentSize];
+        CGFloat labelHeight = labelSize.height+10;
+        rowHeight = labelHeight;
         CGFloat labelWidth = labelSize.width+labelHeight/2;
-        if(labelWidth>_contentSize.width){
+        totalWidth = totalWidth+labelWidth+space;
+        if(labelWidth>_contentSize.width-edge*2){
             labelWidth=_contentSize.width-edge*2;
         }
         if ((edgeLeft+labelWidth+edge)>_contentSize.width) {
             edgeTop = edgeTop+labelHeight+space;
             edgeLeft = edge;
+            count++;
         }
+        
         
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(edgeLeft, edgeTop, labelWidth, labelHeight)];
         [_labels addObject:label];
-        label.textColor = [UIColor blackColor];
+        
         label.layer.masksToBounds = YES;
         label.layer.borderWidth = 1;
         label.layer.cornerRadius = labelHeight/2;
-        label.layer.borderColor = [[UIColor blackColor] CGColor];
-        label.text = str;
+        if ([strDic[@"isSelected"] boolValue]) {
+            label.textColor = self.selectedColor;
+            label.layer.borderColor = [self.selectedColor CGColor];
+        }else{
+            label.textColor = self.unselectedColor;
+            label.layer.borderColor = [self.unselectedColor CGColor];
+        }
+        label.text = strDic[@"content"];
         label.textAlignment = NSTextAlignmentCenter;
         label.userInteractionEnabled = YES;
-        label.tag = count++;
+        label.tag = [strDic[@"arrIndex"] intValue];
         label.numberOfLines = 1;
         edgeLeft=edgeLeft+labelWidth+space;
         
         UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapLabel:)];
         [label addGestureRecognizer:tapGes];
-
         [self addSubview:label];
     }
+    
+    if (_contentArray.count) {
+        totalHeight = edge*2+count*rowHeight+(count-1)*space;
+        totalWidth = totalWidth+edge*2-space;
+    }
+    if (_options == AutoAdjustHeightAndWidthStyle) {
+        if (_contentSize.width>totalWidth) {
+            _contentSize.width = totalWidth;
+        }
+        self.frame = CGRectMake(_contentOrigin.x, _contentOrigin.y, _contentSize.width, totalHeight);
+        _sizeBlock(self.frame.size);
+    }
+    
 }
 
-#pragma -mark 私有方法
 - (CGSize)labelAutoCalculateRectWith:(NSString *)text FontSize:(CGFloat)fontSize MaxSize:(CGSize)maxSize{
     NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc]init];
     paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
@@ -91,24 +157,33 @@
 }
 
 -(void)tapLabel:(UITapGestureRecognizer*)sender{
-    //sender.view.layer.borderColor = [[UIColor redColor] CGColor];
-    long index;
-    if (sender.view.tag>0) {
-        index = sender.view.tag-1;
+    if (_isMutiSelected) {
+        UILabel *label = _labels[sender.view.tag];
+        NSMutableDictionary *labelState = _contentArray[sender.view.tag];
+        if ([labelState[@"isSelected"] boolValue]) {
+            label.textColor = self.unselectedColor;
+            label.layer.borderColor = self.unselectedColor.CGColor;
+            labelState[@"isSelected"] = @(NO);
+        }else{
+            label.textColor = self.selectedColor;
+            label.layer.borderColor = self.selectedColor.CGColor;
+            labelState[@"isSelected"] = @(YES);
+        }
     }else{
-        index = -sender.view.tag-1;
+        for (int i=0; i<_contentArray.count; i++) {
+            if (i==sender.view.tag) {
+                UILabel *label = _labels[i];
+                label.textColor = self.selectedColor;
+                label.layer.borderColor = self.selectedColor.CGColor;
+            }else{
+                UILabel *label = _labels[i];
+                label.textColor = self.unselectedColor;
+                label.layer.borderColor = self.unselectedColor.CGColor;
+            }
+        }
     }
-    UILabel *selectedLabel = _labels[index];
-    if(sender.view.tag>0){
-        sender.view.layer.borderColor = [[UIColor redColor] CGColor];
-        selectedLabel.textColor = [UIColor redColor];
-        sender.view.tag = -sender.view.tag;
-    }else{
-        sender.view.layer.borderColor = [[UIColor blackColor] CGColor];
-        selectedLabel.textColor = [UIColor blackColor];
-        sender.view.tag = -sender.view.tag;
-    }
-    NSLog(@"%@",_labels);
 }
+
+
 
 @end

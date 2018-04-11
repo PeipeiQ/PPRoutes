@@ -8,7 +8,24 @@
 
 #import <UIKit/UIKit.h>
 
+
+typedef NS_ENUM(NSInteger,LabelViewLayoutStyle) {
+    FixedBothHeightAndWidthStyle=0,
+    AutoAdjustHeightAndWidthStyle=1,
+};
+
+typedef void (^resetBlock)(CGSize newSize);
+
 @interface ButtonView : UIView
 
--(instancetype)initWithFrame:(CGRect)frame contentArray:(NSArray*)contentArray;
+@property(nonatomic,assign)CGFloat fontSize;
+@property(nonatomic,strong)UIColor* unselectedColor;
+@property(nonatomic,strong)UIColor* selectedColor;
+@property(nonatomic,assign)BOOL hasDefualtSelected;
+@property(nonatomic,assign)NSUInteger defaultSelected;
+@property(nonatomic,assign)CGFloat edge;
+@property(nonatomic,assign)CGFloat space;
+@property(nonatomic,assign)BOOL isMutiSelected;
+
+-(instancetype)initWithFrame:(CGRect)frame contentArray:(NSArray*)contentArray fontSize:(CGFloat)fontsize options:(LabelViewLayoutStyle)options sizeBlock:(resetBlock)block;
 @end

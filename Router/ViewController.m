@@ -10,8 +10,11 @@
 #import "FirstViewController.h"
 #import "ButtonView.h"
 
-@interface ViewController ()
+
+
+@interface ViewController ()<UIScrollViewDelegate>
 @property(nonatomic,strong) NSString *name;
+
 @end
 
 @implementation ViewController
@@ -19,12 +22,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     //[self routerDemo];
+    self.view.backgroundColor = [UIColor lightGrayColor];
     [self labelTest];
 }
 
 -(void)labelTest{
-    NSArray *arr = @[@"aghfghdgijdfkgjdlfkjgdlkfc",@"byryttjgbb",@"sdrrkkkktrh",@"sfgsdgjdfkhdfk",@"sdafa",@"sfjhsbdjd"];
-    ButtonView *bView = [[ButtonView alloc]initWithFrame:CGRectMake(0, 64, 375, 500) contentArray:arr];
+    NSArray *arr = @[@"aghfggkjdhghjhkjhkdlkfc",@"akdfsdfsdklk",@"asdhaksdjh",@"skajfjksdfhjdfhksdjfh",@"你好",@"00000123",@"啊啊啊啊",@"啊",@"啊",@"sajfskfhskfdjs",@"%$^%&*%^&"];
+    ButtonView *bView = [[ButtonView alloc]initWithFrame:CGRectMake(0, 64, 375, 500) contentArray:arr fontSize:17 options:AutoAdjustHeightAndWidthStyle sizeBlock:^(CGSize newSize) {
+        NSLog(@"%f--%f",newSize.height,newSize.width);
+    }];
+    bView.edge = 20;
+    bView.space = 8;
     [self.view addSubview:bView];
     
 }
