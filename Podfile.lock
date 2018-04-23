@@ -1,12 +1,17 @@
 PODS:
   - JLRoutes (2.1)
+  - SDWebImage (4.2.3):
+    - SDWebImage/Core (= 4.2.3)
+  - SDWebImage/Core (4.2.3)
 
 DEPENDENCIES:
   - JLRoutes
+  - SDWebImage
 
 SPEC CHECKSUMS:
   JLRoutes: d755245322b94227662ea3e43492fdca94e05c5b
+  SDWebImage: 791bb72962b3492327ddcac4b1880bd1b5458431
 
-PODFILE CHECKSUM: c5c26d83abe59159783b961da76965db5fcf74d7
+PODFILE CHECKSUM: 861cfcdfa16b1cf5bda013214f9f1fdbc8437171
 
 COCOAPODS: 1.4.0

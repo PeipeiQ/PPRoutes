@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7868CB5A208DB35200545FC2 /* PPOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7868CB59208DB35200545FC2 /* PPOperation.m */; };
 		787D41FD2074A18200A9ADB1 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D41FC2074A18200A9ADB1 /* AppDelegate.m */; };
 		787D42002074A18200A9ADB1 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 787D41FF2074A18200A9ADB1 /* ViewController.m */; };
 		787D42032074A18200A9ADB1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 787D42012074A18200A9ADB1 /* Main.storyboard */; };
@@ -44,6 +45,8 @@
 /* Begin PBXFileReference section */
 		69012E360C91656CAE05D51D /* Pods-Router.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Router.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Router/Pods-Router.debug.xcconfig"; sourceTree = "<group>"; };
 		6A782DA3D365D125354DA21D /* libPods-Router.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Router.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7868CB58208DB35200545FC2 /* PPOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPOperation.h; sourceTree = "<group>"; };
+		7868CB59208DB35200545FC2 /* PPOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPOperation.m; sourceTree = "<group>"; };
 		787D41F82074A18200A9ADB1 /* Router.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Router.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		787D41FB2074A18200A9ADB1 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		787D41FC2074A18200A9ADB1 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -101,6 +104,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7868CB57208DB2C100545FC2 /* SubClass */ = {
+			isa = PBXGroup;
+			children = (
+				7868CB58208DB35200545FC2 /* PPOperation.h */,
+				7868CB59208DB35200545FC2 /* PPOperation.m */,
+			);
+			path = SubClass;
+			sourceTree = "<group>";
+		};
 		787D41EF2074A18200A9ADB1 = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +138,7 @@
 		787D41FA2074A18200A9ADB1 /* Router */ = {
 			isa = PBXGroup;
 			children = (
+				7868CB57208DB2C100545FC2 /* SubClass */,
 				962445A5207CB4DF00D663B0 /* ButtonView */,
 				787D4237207B194500A9ADB1 /* Category */,
 				787D422D2074A19400A9ADB1 /* Controllers */,
@@ -404,6 +417,7 @@
 				787D423A207B33F000A9ADB1 /* UIViewController+LogMsg.m in Sources */,
 				787D420B2074A18200A9ADB1 /* main.m in Sources */,
 				787D41FD2074A18200A9ADB1 /* AppDelegate.m in Sources */,
+				7868CB5A208DB35200545FC2 /* PPOperation.m in Sources */,
 				962445A8207CB51000D663B0 /* ButtonView.m in Sources */,
 				787D42302074A1B700A9ADB1 /* FirstViewController.m in Sources */,
 			);
