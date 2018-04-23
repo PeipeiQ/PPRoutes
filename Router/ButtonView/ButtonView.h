@@ -18,6 +18,7 @@ typedef void (^resetBlock)(CGSize newSize);
 
 @interface ButtonView : UIView
 
+@property(nonatomic,copy)NSArray *contentsArray;
 @property(nonatomic,assign)CGFloat fontSize;
 @property(nonatomic,strong)UIColor* unselectedColor;
 @property(nonatomic,strong)UIColor* selectedColor;
@@ -28,4 +29,6 @@ typedef void (^resetBlock)(CGSize newSize);
 @property(nonatomic,assign)BOOL isMutiSelected;
 
 -(instancetype)initWithFrame:(CGRect)frame contentArray:(NSArray*)contentArray fontSize:(CGFloat)fontsize options:(LabelViewLayoutStyle)options sizeBlock:(resetBlock)block;
+
+-(void)reloadLabelView;
 @end

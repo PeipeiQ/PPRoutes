@@ -14,7 +14,7 @@
 @property(nonatomic,assign) CGSize contentSize;
 @property(nonatomic,assign) CGPoint contentOrigin;
 
-@property(nonatomic,strong) NSArray *contentArr;
+
 @property(nonatomic,strong) NSMutableArray *contentArray;
 @property(nonatomic,strong) NSMutableArray *labels;
 @property(nonatomic,strong) resetBlock sizeBlock;
@@ -38,7 +38,7 @@
         _labels = [NSMutableArray array];
         _contentOrigin = frame.origin;
         _contentSize = frame.size;
-        _contentArr = contentArray;
+        _contentsArray = contentArray;
         _fontSize = fontsize;
         _options = options;
         _sizeBlock = block;
@@ -56,9 +56,16 @@
 }
 
 
-
 -(void)layoutSubviews{
-    [self renderLabels:_contentArr];
+    [self renderLabels:_contentsArray];
+    [self reloadLabelView];
+}
+
+-(void)reloadLabelView{
+    for (UILabel *label in self.subviews) {
+        [label removeFromSuperview];
+    }
+    NSLog(@"%@", _labels);
 }
 
 #pragma -mark private event
@@ -108,7 +115,6 @@
         
         
         UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(edgeLeft, edgeTop, labelWidth, labelHeight)];
-        [_labels addObject:label];
         
         label.layer.masksToBounds = YES;
         label.layer.borderWidth = 1;
@@ -129,6 +135,9 @@
         
         UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapLabel:)];
         [label addGestureRecognizer:tapGes];
+        
+        //__weak UILabel *subviewLabel = label;
+        [_labels addObject:label];
         [self addSubview:label];
     }
     
