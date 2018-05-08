@@ -30,9 +30,15 @@
 
 @implementation SDWebImageDownloader
 
+//第一次使用该类的初始化方法
 + (void)initialize {
     // Bind SDNetworkActivityIndicator if available (download it here: http://github.com/rs/SDNetworkActivityIndicator )
     // To use it, just add #import "SDNetworkActivityIndicator.h" in addition to the SDWebImage import
+    
+    //NSClassFromString:如果存在SDNetworkActivityIndicator这个类时，则返回这一个类，否则返回为空
+    /*NSClassFromString的好处是：
+     1 弱化连接，因此并不会把没有的Framework也link到程序中。
+     2不需要使用import，因为类是动态加载的，只要存在就可以加载。因此如果你的toolchain中没有某个类的头文件定义，而你确信这个类是可以用的，那么也可以用这种方法。*/
     if (NSClassFromString(@"SDNetworkActivityIndicator")) {
 
 #pragma clang diagnostic push
@@ -41,6 +47,7 @@
 #pragma clang diagnostic pop
 
         // Remove observer in case it was previously added.
+        //注册通知的观察者，当接收到通知时执行某一个函数
         [[NSNotificationCenter defaultCenter] removeObserver:activityIndicator name:SDWebImageDownloadStartNotification object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:activityIndicator name:SDWebImageDownloadStopNotification object:nil];
 
@@ -53,6 +60,7 @@
     }
 }
 
+//单例
 + (nonnull instancetype)sharedDownloader {
     static dispatch_once_t once;
     static id instance;
@@ -71,6 +79,7 @@
         _operationClass = [SDWebImageDownloaderOperation class];
         _shouldDecompressImages = YES;
         _executionOrder = SDWebImageDownloaderFIFOExecutionOrder;
+        //设置一个异步队列，最大的并发数设置为6
         _downloadQueue = [NSOperationQueue new];
         _downloadQueue.maxConcurrentOperationCount = 6;
         _downloadQueue.name = @"com.hackemist.SDWebImageDownloader";
@@ -187,6 +196,8 @@
         else {
             request.allHTTPHeaderFields = sself.HTTPHeaders;
         }
+        
+        //设置一个异步任务，继承自NSOperation，当任务加入一个queue时开始执行子类的start函数
         SDWebImageDownloaderOperation *operation = [[sself.operationClass alloc] initWithRequest:request inSession:sself.session options:options];
         operation.shouldDecompressImages = sself.shouldDecompressImages;
         
@@ -208,7 +219,8 @@
             [sself.lastAddedOperation addDependency:operation];
             sself.lastAddedOperation = operation;
         }
-
+        
+        //将这个任务返回
         return operation;
     }];
 }
@@ -254,6 +266,8 @@
 				});
             };
         }
+        
+        //将下载进度和下载完成两个block封装成字典装入
         id downloadOperationCancelToken = [operation addHandlersForProgress:progressBlock completed:completedBlock];
 
         token = [SDWebImageDownloadToken new];

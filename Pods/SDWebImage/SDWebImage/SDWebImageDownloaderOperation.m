@@ -166,6 +166,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         self.executing = YES;
     }
     
+    //开始下载任务
     [self.dataTask resume];
 
     if (self.dataTask) {
@@ -174,6 +175,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         }
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            //开始下载时发出一个通知
             [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:weakSelf];
         });
     } else {
@@ -207,6 +210,8 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
         [self.dataTask cancel];
         __weak typeof(self) weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            //结束下载时发出一个通知
             [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:weakSelf];
         });
 
@@ -269,6 +274,7 @@ typedef NSMutableDictionary<NSString *, id> SDCallbacksDictionary;
 
 #pragma mark NSURLSessionDataDelegate
 
+//下载后的代理，处理下载的回调
 - (void)URLSession:(NSURLSession *)session
           dataTask:(NSURLSessionDataTask *)dataTask
 didReceiveResponse:(NSURLResponse *)response
@@ -286,6 +292,8 @@ didReceiveResponse:(NSURLResponse *)response
         self.imageData = [[NSMutableData alloc] initWithCapacity:expected];
         self.response = response;
         __weak typeof(self) weakSelf = self;
+        
+        //在主线程发出下载后接收到数据的通知
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadReceiveResponseNotification object:weakSelf];
         });
