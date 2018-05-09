@@ -54,6 +54,7 @@
     return self;
 }
 
+//将url转化为key，key值可以作为缓存的标志
 - (nullable NSString *)cacheKeyForURL:(nullable NSURL *)url {
     if (!url) {
         return @"";
@@ -194,6 +195,8 @@
                     // See #699 for more details
                     // if we would call the completedBlock, there could be a race condition between this block and another completedBlock for the same object, so if this one is called second, we will overwrite the new data
                 } else if (error) {
+                    
+                    //下载失败的情况,包装一个error对象
                     [self callCompletionBlockForOperation:strongOperation completion:completedBlock error:error url:url];
 
                     if (   error.code != NSURLErrorNotConnectedToInternet
@@ -242,6 +245,8 @@
                         });
                     } else {
                         if (downloadedImage && finished) {
+                            
+                            //将下载成功的图片进行缓存
                             [self.imageCache storeImage:downloadedImage imageData:downloadedData forKey:key toDisk:cacheOnDisk completion:nil];
                         }
                         [self callCompletionBlockForOperation:strongOperation completion:completedBlock image:downloadedImage data:downloadedData error:nil cacheType:SDImageCacheTypeNone finished:finished url:url];

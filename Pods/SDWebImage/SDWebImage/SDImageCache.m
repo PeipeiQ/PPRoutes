@@ -207,12 +207,15 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
         return;
     }
     // if memory cache is enabled
+    //存到内存
     if (self.config.shouldCacheImagesInMemory) {
         NSUInteger cost = SDCacheCostForImage(image);
         [self.memCache setObject:image forKey:key cost:cost];
     }
     
+    //存到磁盘
     if (toDisk) {
+        //在子线程中进行操作
         dispatch_async(self.ioQueue, ^{
             @autoreleasepool {
                 NSData *data = imageData;
@@ -224,8 +227,10 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
                     } else {
                         format = SDImageFormatJPEG;
                     }
+                    //先进行encode，压缩图片
                     data = [[SDWebImageCodersManager sharedInstance] encodedDataWithImage:image format:format];
                 }
+                
                 [self storeImageDataToDisk:data forKey:key];
             }
             
@@ -242,6 +247,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }
 }
 
+//通过key值将图片存进硬盘
 - (void)storeImageDataToDisk:(nullable NSData *)imageData forKey:(nullable NSString *)key {
     if (!imageData || !key) {
         return;
@@ -254,6 +260,7 @@ FOUNDATION_STATIC_INLINE NSUInteger SDCacheCostForImage(UIImage *image) {
     }
     
     // get cache Path for image key
+    //生成存储的路径
     NSString *cachePathForKey = [self defaultCachePathForKey:key];
     // transform to NSUrl
     NSURL *fileURL = [NSURL fileURLWithPath:cachePathForKey];
