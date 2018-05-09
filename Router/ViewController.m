@@ -8,13 +8,11 @@
 
 #import "ViewController.h"
 #import "FirstViewController.h"
-#import "ButtonView.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "PPOperation.h"
 
 @interface ViewController ()<UIScrollViewDelegate,ButtonViewDelegate>
 @property(nonatomic,strong) NSString *name;
-@property(nonatomic,strong) ButtonView *bView;
 @property(nonatomic,strong) NSCache *cache;
 @property(nonatomic,strong) NSOperation *operation;
 @property(nonatomic,strong) NSOperationQueue *operationQueue;
@@ -27,7 +25,6 @@
     [super viewDidLoad];
     [self routerDemo];
     self.view.backgroundColor = [UIColor lightGrayColor];
-    //[self labelTest];
     //[self cacheDemo];
     //[self sdDemo];
     [self operationDemo];
@@ -162,40 +159,7 @@
     NSLog(@"%@",[_cache objectForKey:@"label"]);
 }
 
-//标签视图
--(void)labelTest{
-    NSArray *arr = @[@"aghfggkjdhghjhkjhkdlkfc",@"akdfsdfsdklk",@"asdhaksdjh",@"skajfjksdfhjdfhksdjfh",@"你好",@"00000123",@"啊啊啊啊",@"啊",@"啊",@"sajfskfhskfdjs",@"%$^%&*%^&"];
-    _bView = [[ButtonView alloc]initWithFrame:CGRectMake(0, 64, 375, 500) contentArray:arr fontSize:16 options:AutoAdjustHeightAndWidthStyle sizeBlock:nil];
-    _bView.delegate = self;
-    [self.view addSubview:_bView];
-    
-    UILabel *lb = [[UILabel alloc]initWithFrame:CGRectMake(40, 230, 200, 30)];
-    lb.text = @"aa嗷嗷";
-    [self.view addSubview:lb];
-    
-    UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(200, 400, 40, 40)];
-    btn.backgroundColor = [UIColor orangeColor];
-    [btn addTarget:self action:@selector(btntap) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:btn];
-    
-}
 
--(void)touchLabelAtIndex:(NSUInteger)index content:(NSString *)content{
-    NSLog(@"%lu____%@",index,content);
-}
-
--(void)updateLabelViewFrame:(CGSize)frameSize{
-    NSLog(@"%f___%f",frameSize.width,frameSize.height);
-}
-
--(void)btntap{
-    _bView.contentArr = @[@"safas",@"sdfaf"];
-    [_bView reloadView];
-}
-
--(void)tap:(UITapGestureRecognizer*)sender{
-    NSLog(@"aaa");
-}
 
 //路由跳转
 -(void)routerDemo{
